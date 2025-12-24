@@ -1,0 +1,299 @@
+<!-- 在原有HTML基础上添加以下部分 -->
+
+<!-- 帧编辑模态框 -->
+<div id="frameEditorModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-edit"></i> 帧编辑</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="editor-container">
+                <!-- 编辑画布 -->
+                <div class="editor-canvas">
+                    <canvas id="editorCanvas"></canvas>
+                    <div class="editor-tools">
+                        <button id="cropTool" title="裁剪">
+                            <i class="fas fa-crop"></i>
+                        </button>
+                        <button id="rotateLeft" title="左旋转90°">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                        <button id="rotateRight" title="右旋转90°">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                        <button id="flipHorizontal" title="水平翻转">
+                            <i class="fas fa-arrows-alt-h"></i>
+                        </button>
+                        <button id="flipVertical" title="垂直翻转">
+                            <i class="fas fa-arrows-alt-v"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 调整面板 -->
+                <div class="adjustments-panel">
+                    <div class="adjustment-group">
+                        <label>亮度</label>
+                        <input type="range" id="brightness" min="-100" max="100" value="0">
+                        <span id="brightnessValue">0</span>
+                    </div>
+                    <div class="adjustment-group">
+                        <label>对比度</label>
+                        <input type="range" id="contrast" min="-100" max="100" value="0">
+                        <span id="contrastValue">0</span>
+                    </div>
+                    <div class="adjustment-group">
+                        <label>饱和度</label>
+                        <input type="range" id="saturation" min="-100" max="100" value="0">
+                        <span id="saturationValue">0</span>
+                    </div>
+                    <div class="adjustment-group">
+                        <label>透明度</label>
+                        <input type="range" id="opacity" min="0" max="100" value="100">
+                        <span id="opacityValue">100%</span>
+                    </div>
+                    <div class="adjustment-group">
+                        <label>背景色</label>
+                        <input type="color" id="bgColor" value="#ffffff">
+                        <label class="checkbox">
+                            <input type="checkbox" id="transparentBg"> 透明背景
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 编辑操作 -->
+            <div class="editor-actions">
+                <button id="applyToAllFrames" class="btn-secondary">
+                    <i class="fas fa-layer-group"></i> 应用到所有帧
+                </button>
+                <button id="resetFrame" class="btn-secondary">
+                    <i class="fas fa-undo-alt"></i> 重置
+                </button>
+                <button id="saveFrameEdit" class="btn-primary">
+                    <i class="fas fa-save"></i> 保存修改
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 预设模板模态框 -->
+<div id="templateModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-magic"></i> 动画模板</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="template-grid">
+                <!-- 模板项 -->
+                <div class="template-item" data-template="blink">
+                    <div class="template-preview blink-animation"></div>
+                    <h4>闪烁</h4>
+                    <p>帧循环显示/隐藏</p>
+                </div>
+                <div class="template-item" data-template="slide">
+                    <div class="template-preview slide-animation"></div>
+                    <h4>滑动</h4>
+                    <p>平滑移动效果</p>
+                </div>
+                <div class="template-item" data-template="fade">
+                    <div class="template-preview fade-animation"></div>
+                    <h4>淡入淡出</h4>
+                    <p>透明度过渡</p>
+                </div>
+                <div class="template-item" data-template="bounce">
+                    <div class="template-preview bounce-animation"></div>
+                    <h4>弹跳</h4>
+                    <p>弹性运动效果</p>
+                </div>
+                <div class="template-item" data-template="rotate">
+                    <div class="template-preview rotate-animation"></div>
+                    <h4>旋转</h4>
+                    <p>360度旋转</p>
+                </div>
+                <div class="template-item" data-template="zoom">
+                    <div class="template-preview zoom-animation"></div>
+                    <h4>缩放</h4>
+                    <p>放大缩小效果</p>
+                </div>
+                <div class="template-item" data-template="shake">
+                    <div class="template-preview shake-animation"></div>
+                    <h4>抖动</h4>
+                    <p>震动效果</p>
+                </div>
+                <div class="template-item" data-template="wave">
+                    <div class="template-preview wave-animation"></div>
+                    <h4>波浪</h4>
+                    <p>波浪形运动</p>
+                </div>
+            </div>
+            
+            <!-- 模板参数 -->
+            <div class="template-params">
+                <div class="param-group">
+                    <label>强度</label>
+                    <input type="range" id="templateStrength" min="1" max="100" value="50">
+                </div>
+                <div class="param-group">
+                    <label>速度</label>
+                    <input type="range" id="templateSpeed" min="1" max="10" value="5">
+                </div>
+                <div class="param-group">
+                    <label>循环次数</label>
+                    <input type="number" id="templateLoops" min="1" max="10" value="1">
+                </div>
+            </div>
+            
+            <div class="template-actions">
+                <button id="applyTemplate" class="btn-primary">
+                    <i class="fas fa-check"></i> 应用模板
+                </button>
+                <button id="previewTemplate" class="btn-secondary">
+                    <i class="fas fa-play"></i> 预览效果
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 历史记录侧边栏 -->
+<div id="historySidebar" class="sidebar">
+    <div class="sidebar-header">
+        <h3><i class="fas fa-history"></i> 历史记录</h3>
+        <button class="close-sidebar">&times;</button>
+    </div>
+    <div class="sidebar-content">
+        <div class="history-actions">
+            <button id="clearHistory" class="btn-small">
+                <i class="fas fa-trash"></i> 清空历史
+            </button>
+            <button id="exportHistory" class="btn-small">
+                <i class="fas fa-download"></i> 导出记录
+            </button>
+        </div>
+        <div class="history-list" id="historyList">
+            <!-- 历史记录项将通过JS动态生成 -->
+        </div>
+    </div>
+</div>
+
+<!-- 社交分享模态框 -->
+<div id="shareModal" class="modal">
+    <div class="modal-content share-modal">
+        <div class="modal-header">
+            <h3><i class="fas fa-share-alt"></i> 分享GIF</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="share-preview">
+                <img id="sharePreview" src="" alt="分享预览">
+                <div class="share-info">
+                    <h4 id="shareTitle">我的GIF动画</h4>
+                    <p id="shareDescription">使用GIF生成器创建</p>
+                    <div class="share-stats">
+                        <span><i class="fas fa-file"></i> <span id="shareSize">0 KB</span></span>
+                        <span><i class="fas fa-expand-arrows-alt"></i> <span id="shareDimensions">0x0</span></span>
+                        <span><i class="fas fa-clock"></i> <span id="shareDuration">0s</span></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="share-options">
+                <div class="share-method">
+                    <h4>分享方式</h4>
+                    <div class="share-buttons">
+                        <button class="share-btn" data-method="link">
+                            <i class="fas fa-link"></i> 复制链接
+                        </button>
+                        <button class="share-btn" data-method="embed">
+                            <i class="fas fa-code"></i> 嵌入代码
+                        </button>
+                        <button class="share-btn" data-method="social">
+                            <i class="fas fa-share"></i> 社交媒体
+                        </button>
+                        <button class="share-btn" data-method="qr">
+                            <i class="fas fa-qrcode"></i> 二维码
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="share-link-section" id="linkSection">
+                    <input type="text" id="shareLink" readonly>
+                    <button id="copyLink" class="btn-small">
+                        <i class="fas fa-copy"></i> 复制
+                    </button>
+                </div>
+                
+                <div class="share-embed-section" id="embedSection" style="display:none;">
+                    <textarea id="embedCode" readonly rows="3"></textarea>
+                    <button id="copyEmbed" class="btn-small">
+                        <i class="fas fa-copy"></i> 复制代码
+                    </button>
+                </div>
+                
+                <div class="share-qr-section" id="qrSection" style="display:none;">
+                    <canvas id="qrCanvas"></canvas>
+                    <button id="downloadQR" class="btn-small">
+                        <i class="fas fa-download"></i> 下载二维码
+                    </button>
+                </div>
+            </div>
+            
+            <div class="share-social" id="socialSection" style="display:none;">
+                <div class="social-buttons">
+                    <button class="social-btn twitter">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </button>
+                    <button class="social-btn facebook">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </button>
+                    <button class="social-btn whatsapp">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </button>
+                    <button class="social-btn reddit">
+                        <i class="fab fa-reddit"></i> Reddit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新的顶部工具栏（添加在app-header内） -->
+<div class="top-toolbar">
+    <button id="toggleHistory" class="toolbar-btn">
+        <i class="fas fa-history"></i> 历史记录
+    </button>
+    <button id="showTemplates" class="toolbar-btn">
+        <i class="fas fa-magic"></i> 模板
+    </button>
+    <button id="showShare" class="toolbar-btn" disabled>
+        <i class="fas fa-share-alt"></i> 分享
+    </button>
+    <button id="toggleDarkMode" class="toolbar-btn">
+        <i class="fas fa-moon"></i> 夜间模式
+    </button>
+    <button id="showSettings" class="toolbar-btn">
+        <i class="fas fa-cog"></i> 设置
+    </button>
+</div>
+
+<!-- 在图片列表项中添加编辑按钮 -->
+<!-- 修改createImageListItem函数生成的HTML -->
+<div class="image-item" data-id="${imageData.id}">
+    <img src="${imageData.img.src}" class="image-preview" alt="${imageData.name}">
+    <div class="image-info">
+        <div class="image-name">${imageData.name}</div>
+        <div class="image-size">${imageData.size}</div>
+        <div class="image-status" id="status-${imageData.id}"></div>
+    </div>
+    <div class="image-actions">
+        <button class="edit-frame" data-id="${imageData.id}" title="编辑帧">
+            <i class="fas fa-edit"></i>
+        </button>
+        <input type="checkbox" ${imageData.selected ? 'checked' : ''}>
+    </div>
+</div>
